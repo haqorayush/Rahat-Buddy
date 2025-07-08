@@ -3,11 +3,9 @@ from telegram.ext import Application, CommandHandler, MessageHandler, ContextTyp
 from dotenv import load_dotenv
 import os
 
-# Load environment variables from .env file
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
 
-# Define command handlers
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("""Hello! This is Aapada Mitra\n
 Click /content for more info
@@ -84,17 +82,14 @@ async def heatwave_response(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
     await update.message.reply_text(response)
 
-# Message handler for detecting specific keywords
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.lower()
 
-    # Define keyword sets for each response
     snake_bite_keywords = {"snake bite", "snakebite", "snake"}
     lightning_keywords = {"lightning", "storm", "thunder"}
     boat_safety_keywords = {"boat safety", "boating", "boat", "watercraft"}
     heatwave_keywords = {"heatwave", "heat wave", "hot weather", "extreme heat"}
 
-    # Check if any keyword from the sets is in the message
     if any(keyword in text for keyword in snake_bite_keywords):
         await snake_bite_response(update, context)
     elif any(keyword in text for keyword in lightning_keywords):
@@ -106,20 +101,15 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await update.message.reply_text("I'm sorry, I couldn't understand your request. Please try again with more specific keywords.")
 
-# Main function to set up the bot
 def main():
-    # Create the Application object and pass your bot's token
     app = Application.builder().token(TOKEN).build()
 
-    # Register command handlers
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help))
     app.add_handler(CommandHandler("content", content))
 
-    # Register message handler
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
-    # Start the bot
     print("Bot is running...")
     app.run_polling()
 
